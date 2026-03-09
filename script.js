@@ -118,3 +118,54 @@ function filterData(status, element) {
     }
 }
 
+/**
+ * Details Modal
+ */
+async function showDetails(id) {
+    const res = await fetch(`https://phi-lab-server.vercel.app/api/v1/lab/issue/${id}`);
+    const data = await res.json();
+    const issue = data.data;
+
+    const modalContent = document.getElementById('modal-content');
+    modalContent.innerHTML = `
+        <div class="h-2 w-full ${issue.status === 'open' ? 'bg-green-500' : 'bg-purple-500'}"></div>
+        <div class="p-8">
+            <div class="flex justify-between items-center mb-6">
+                <span class="badge badge-ghost uppercase font-bold text-[10px]">${issue.label}</span>
+                <button onclick="document.getElementById('issue_modal').close()" class="btn btn-sm btn-circle btn-ghost">✕</button>
+            </div>
+            <h3 class="font-black text-3xl mb-4 text-gray-800">${issue.title}</h3>
+            <p class="text-gray-600 leading-relaxed mb-8 border-l-4 border-gray-200 pl-4 italic">${issue.description}</p>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 py-6 border-t border-b border-gray-100 mb-6">
+                <div>
+                    <p class="text-xs text-gray-400 uppercase font-bold">Status</p>
+                    <p class="font-bold text-gray-700 capitalize">${issue.status}</p>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-400 uppercase font-bold">Priority</p>
+                    <p class="font-bold text-gray-700 capitalize">${issue.priority}</p>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-400 uppercase font-bold">Reporter</p>
+                    <p class="font-bold text-gray-700">${issue.author}</p>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-400 uppercase font-bold">Date</p>
+                    <p class="font-bold text-gray-700">${new Date(issue.createdAt).toLocaleDateString()}</p>
+                </div>
+            </div>
+            <div class="flex justify-end">
+                <button onclick="document.getElementById('issue_modal').close()" class="btn btn-primary px-8 text-white">Close Details</button>
+            </div>
+        </div>
+    `;
+    document.getElementById('issue_modal').showModal();
+}
+
+function toggleLoading(isLoading) {
+    const loader = document.getElementById('loading');
+    const container = document.getElementById('issues-container');
+    loader.classList.toggle('hidden', !isLoading);
+    container.classList.toggle('hidden', isLoading);
+}
