@@ -12,7 +12,7 @@ function handleLogin() {
         document.getElementById('main-content').classList.remove('hidden');
         fetchAllIssues();
     } else {
-        alert(" Wrong passwprd or username ! use demo.");
+        alert(" Wrong password or username ! use demo.");
     }
 }
 
